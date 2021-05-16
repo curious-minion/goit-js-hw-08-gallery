@@ -1,14 +1,14 @@
 import images from "/gallery-items.js";
 
 const galleryEl = document.querySelector('.js-gallery');
-const lightBoxEl = document.querySelector('.lightbox');
-const closeLightboxEl = document.querySelector('[data-action="close--lightbox"]')
-const galleryLinkEl = document.querySelector('.gallery__link');
+const lightboxEl = document.querySelector('.lightbox');
+const closeLightboxEl = document.querySelector('[data-action="close-lightbox"]')
+const lightboxImageEl = document.querySelector('.lightbox__image');
+const backdropEl = document.querySelector('.lightbox__overlay');
 
 galleryEl.insertAdjacentHTML('beforeend', createImagesList(images));
 
-console.log(galleryEl);
-galleryEl.addEventListener('click', onGalleryElClick);
+galleryEl.addEventListener('click', onGalleryItemClick);
 
 function createImagesList(images){
   return images.map(({preview, original, description}) =>{
@@ -31,40 +31,53 @@ function createImagesList(images){
   .join('');
 }
 
+function onGalleryItemClick(e) {
+   e.preventDefault();
+
+    if (!e.target.classList.contains('gallery__image')) {
+        return;
+    }
+  const galleryPictureSource = e.target.dataset.source;
+  return galleryPictureSource;
+
+}
 
 
-// const refs = {
-//   openBigPicture: galleryLinkEl,
-//   closeModalBtn: closeLightboxEl,
-//   backdrop: lightBoxEl,
-// };
+galleryEl.addEventListener('click', onOpenModal);
+closeLightboxEl.addEventListener('click', onCloseModal);
+backdropEl.addEventListener('click', onBackdropClick);
 
-// refs.openBigPicture.addEventListener('click', onOpenModal);
-// refs.closeModalBtn.addEventListener('click', onCloseModal);
-// refs.backdrop.addEventListener('click', onBackdropClick);
+function onOpenModal(e) {
+ 
+  window.addEventListener('keydown', onEscKeyPress);
+//  window.addEventListener('keydown', onArrowLeftKeyPress);
+//   window.addEventListener('keydown', onArrowRightKeyPress);
+  
+  lightboxEl.classList.add('is-open');
+  lightboxImageEl.src = onGalleryItemClick(e);
+}
 
-// function onOpenModal() {
-//   window.addEventListener('keydown', onEscKeyPress);
-//   document.body.classList.add('is-open');
-// }
 
-// function onCloseModal() {
-//   window.removeEventListener('keydown', onEscKeyPress);
-//   document.body.classList.remove('is-open');
-// }
+function onCloseModal() {
+  window.removeEventListener('keydown', onEscKeyPress);
+  // window.removeEventListener('keydown', onArrowLeftKeyPress);
+  // window.removeEventListener('keydown', onArrowRightKeyPress);
+ 
+  lightboxEl.classList.remove('is-open');
+  lightboxImageEl.scr = '';
+}
 
-// function onBackdropClick(event) {
-//   if (event.currentTarget === event.target) {
+function onBackdropClick(event) {
+  if (event.currentTarget === event.target) {
     
-//     onCloseModal();
-//   }
-// }
+    onCloseModal();
+  }
+}
 
-// function onEscKeyPress(event) {
-//   const ESC_KEY_CODE = 'Escape';
-//   const isEscKey = event.code === ESC_KEY_CODE;
+function onEscKeyPress(event) {
+  if (event.code === 'Escape') {
+    onCloseModal();
+  }
+};
 
-//   if (isEscKey) {
-//     onCloseModal();
-//   }
-// }
+
