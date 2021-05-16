@@ -50,17 +50,18 @@ backdropEl.addEventListener('click', onBackdropClick);
 function onOpenModal(e) {
  
   window.addEventListener('keydown', onEscKeyPress);
-//  window.addEventListener('keydown', onArrowLeftKeyPress);
+ window.addEventListener('keydown', onArrowKeyPress);
 //   window.addEventListener('keydown', onArrowRightKeyPress);
   
   lightboxEl.classList.add('is-open');
   lightboxImageEl.src = onGalleryItemClick(e);
+  // lightboxImageEl.dataset.index = changeImage(index);
 }
 
 
 function onCloseModal() {
   window.removeEventListener('keydown', onEscKeyPress);
-  // window.removeEventListener('keydown', onArrowLeftKeyPress);
+  window.removeEventListener('keydown', onArrowKeyPress);
   // window.removeEventListener('keydown', onArrowRightKeyPress);
  
   lightboxEl.classList.remove('is-open');
@@ -80,4 +81,39 @@ function onEscKeyPress(event) {
   }
 };
 
+function getElementIndex(element) {
+  return Array.from(element.parentNode.children).indexOf(element);
+}
 
+const imageEl = document.querySelector('.js-gallery.img');
+
+
+
+function changeImage(index) {
+  const galleryItemEl = document.querySelector('.gallery__item');
+  let indexOfGalleryImage = getElementIndex(galleryItemEl);
+  
+
+  for (let i = 0; i < galleryEl.length; i += 1) {
+    indexOfGalleryImage += index[i];
+  }
+
+  if (index === Number(galleryEl.length - 1)) {
+    indexOfGalleryImage = 0;
+  }
+  
+  return indexOfGalleryImage;
+  
+};
+
+document.onkeydown = onArrowKeyPress;
+
+function onArrowKeyPress(e) {
+  e = e || window.event;
+  if (e.keyCode: 37) {
+    changeImage(-1); //left <- show Prev image
+  } else if (e.keyCode: 39) {// right -> show next image
+    changeImage();
+  }
+}
+console.log(onArrowKeyPress());
