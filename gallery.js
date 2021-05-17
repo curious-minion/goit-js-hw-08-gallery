@@ -13,7 +13,7 @@ galleryEl.addEventListener('click', onGalleryItemClick);
 function createImagesList(images){
   return images.map(({preview, original, description}) =>{
     return `
-    <li class="gallery__item">
+    <li class="gallery__item" data-index="">
     <a
     class="gallery__link"
         href="${original}"
@@ -55,7 +55,7 @@ function onOpenModal(e) {
   
   lightboxEl.classList.add('is-open');
   lightboxImageEl.src = onGalleryItemClick(e);
-  // lightboxImageEl.dataset.index = changeImage(index);
+  
 }
 
 
@@ -85,35 +85,47 @@ function getElementIndex(element) {
   return Array.from(element.parentNode.children).indexOf(element);
 }
 
-const imageEl = document.querySelector('.js-gallery.img');
-
-
 
 function changeImage(index) {
   const galleryItemEl = document.querySelector('.gallery__item');
   let indexOfGalleryImage = getElementIndex(galleryItemEl);
   
-
-  for (let i = 0; i < galleryEl.length; i += 1) {
-    indexOfGalleryImage += index[i];
-  }
-
-  if (index === Number(galleryEl.length - 1)) {
-    indexOfGalleryImage = 0;
+  if (index === 0) {
+    indexOfGalleryImage += index;
   }
   
-  return indexOfGalleryImage;
+  else if (index === -1) {
+
+    indexOfGalleryImage -= index;
+    
+  } else if (index === galleryEl.length -1) {
+   
+    indexOfGalleryImage = index;
+  }
   
+  console.log(indexOfGalleryImage);
+  
+  const allImages = document.querySelectorAll('.gallery__image');
+  console.log(allImages);
+  
+  
+  const imgDataSource = allImages[indexOfGalleryImage].dataset.source;
+  console.log(imgDataSource);
+ 
+  lightboxImageEl.src = imgDataSource;
+  console.log(lightboxImageEl.src);
+
 };
 
-document.onkeydown = onArrowKeyPress;
+
 
 function onArrowKeyPress(e) {
-  e = e || window.event;
-  if (e.keyCode: 37) {
+  
+  if (e.code === 'ArrowLeft') {
     changeImage(-1); //left <- show Prev image
-  } else if (e.keyCode: 39) {// right -> show next image
+  } else if (e.code === 'ArrowRight') {// right -> show next image
     changeImage();
   }
 }
-console.log(onArrowKeyPress());
+
+
