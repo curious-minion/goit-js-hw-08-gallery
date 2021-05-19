@@ -31,6 +31,8 @@ function createImagesList(images){
   .join('');
 }
 
+let indexOfGalleryImage = null;
+
 function onGalleryItemClick(e) {
    e.preventDefault();
 
@@ -51,7 +53,7 @@ function onOpenModal(e) {
  
   window.addEventListener('keydown', onEscKeyPress);
  window.addEventListener('keydown', onArrowKeyPress);
-//   window.addEventListener('keydown', onArrowRightKeyPress);
+
   
   lightboxEl.classList.add('is-open');
   lightboxImageEl.src = onGalleryItemClick(e);
@@ -62,10 +64,11 @@ function onOpenModal(e) {
 function onCloseModal() {
   window.removeEventListener('keydown', onEscKeyPress);
   window.removeEventListener('keydown', onArrowKeyPress);
-  // window.removeEventListener('keydown', onArrowRightKeyPress);
+  
  
   lightboxEl.classList.remove('is-open');
   lightboxImageEl.scr = '';
+  indexOfGalleryImage = null;
 }
 
 function onBackdropClick(event) {
@@ -79,53 +82,39 @@ function onEscKeyPress(event) {
   if (event.code === 'Escape') {
     onCloseModal();
   }
-};
+}
 
 function getElementIndex(element) {
   return Array.from(element.parentNode.children).indexOf(element);
 }
 
+const allImages = document.querySelectorAll('.gallery__image');
+const galleryItemEl = document.querySelector('.gallery__item');
 
-function changeImage(index) {
-  const galleryItemEl = document.querySelector('.gallery__item');
-  let indexOfGalleryImage = getElementIndex(galleryItemEl);
-  
-  if (index === 0) {
-    indexOfGalleryImage += index;
-  }
-  
-  else if (index === -1) {
 
-    indexOfGalleryImage -= index;
-    
-  } else if (index === galleryEl.length -1) {
-   
-    indexOfGalleryImage = index;
-  }
+function changeImage(code) {
   
-  console.log(indexOfGalleryImage);
+  if (!indexOfGalleryImage) 
+    indexOfGalleryImage = getElementIndex(galleryItemEl);
   
-  const allImages = document.querySelectorAll('.gallery__image');
-  console.log(allImages);
-  
-  
+
+if (code === "ArrowLeft") {
+indexOfGalleryImage -= 1;
+if (indexOfGalleryImage <= 0) indexOfGalleryImage = images.length-1;
+} else {
+indexOfGalleryImage += 1;
+if (indexOfGalleryImage >= images.length -1) indexOfGalleryImage = 0;
+}
+
   const imgDataSource = allImages[indexOfGalleryImage].dataset.source;
-  console.log(imgDataSource);
- 
   lightboxImageEl.src = imgDataSource;
-  console.log(lightboxImageEl.src);
-
+  
 };
 
 
 
 function onArrowKeyPress(e) {
-  
-  if (e.code === 'ArrowLeft') {
-    changeImage(-1); //left <- show Prev image
-  } else if (e.code === 'ArrowRight') {// right -> show next image
-    changeImage();
-  }
+  changeImage(e.code);
 }
 
 
