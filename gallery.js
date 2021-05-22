@@ -67,7 +67,7 @@ function onCloseModal() {
   
  
   lightboxEl.classList.remove('is-open');
-  lightboxImageEl.scr = '';
+  lightboxImageEl.src = '';
   indexOfGalleryImage = null;
 }
 
@@ -84,28 +84,29 @@ function onEscKeyPress(event) {
   }
 }
 
+const galleryLink = document.querySelectorAll(".gallery__link");
+
 function getElementIndex(element) {
-  return Array.from(element.parentNode.children).indexOf(element);
+return [...galleryLink].indexOf(element);
 }
 
 const allImages = document.querySelectorAll('.gallery__image');
-const galleryItemEl = document.querySelector('.gallery__item');
 
-
-function changeImage(code) {
+function changeImage(e) {
   
-  if (!indexOfGalleryImage) 
-    indexOfGalleryImage = getElementIndex(galleryItemEl);
-  
-
-if (code === "ArrowLeft") {
-indexOfGalleryImage -= 1;
-if (indexOfGalleryImage <= 0) indexOfGalleryImage = images.length-1;
-} else {
-indexOfGalleryImage += 1;
-if (indexOfGalleryImage >= images.length -1) indexOfGalleryImage = 0;
+  if (indexOfGalleryImage === null) {
+indexOfGalleryImage = getElementIndex(e.target);
 }
-
+if (e.code === "ArrowLeft") {
+  indexOfGalleryImage -= 1;
+  
+if (indexOfGalleryImage < 0) indexOfGalleryImage = images.length-1;
+}
+else {
+  indexOfGalleryImage += 1;
+  
+if (indexOfGalleryImage > images.length -1) indexOfGalleryImage = 0;
+}
   const imgDataSource = allImages[indexOfGalleryImage].dataset.source;
   lightboxImageEl.src = imgDataSource;
   
@@ -114,7 +115,7 @@ if (indexOfGalleryImage >= images.length -1) indexOfGalleryImage = 0;
 
 
 function onArrowKeyPress(e) {
-  changeImage(e.code);
+  changeImage(e);
 }
 
 
